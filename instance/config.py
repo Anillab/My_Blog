@@ -1,1 +1,1 @@
-SECRET_KEY="maisha magumu ndugu"
+SECRET_KEY='maisha magumu'
