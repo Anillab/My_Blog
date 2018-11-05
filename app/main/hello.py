@@ -8,13 +8,14 @@ def anilla():
     message='Hey anilla'
     title='blog'
     return render_template('index.html',message=message,title=title)
-@main.route('/next/',methods=['GET','POST'])
+@main.route('/next/')
 def register():
     form=RegistrationForm()
     if form.validate_on_submit():
         username=form.username.data
         email=form.email.data
         password=form.password.data
+        return redirect(url_for("success"))
     return render_template('registration.html',form=form)
 @main.route('/love/<username>')
 def show(username):
