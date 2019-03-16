@@ -3,14 +3,27 @@ from flask import *
 from flask_login import login_required
 from . import main
 from flask_login import login_required,current_user
-from .forms import UpdateProfile
+from .forms import UpdateProfile,PostForm
 from .. import db,photos
-from ..models import User
+from ..models import *
 @main.route('/')
-def anilla():
-    message='Hey anilla'
+def index():
+    posts=Post.query.all()
+    number = len(posts)
     title='blog'
-    return render_template('index.html',message=message,title=title)
+    return render_template('index.html',title=title,posts=posts, number=number)
+
+@main.route('/addpost',methods=['GET','POST'])
+def add_post():
+    form=PostForm()
+    if form.validate_on_submit():
+        title=form.title.data
+        content=form.content.data
+        post=Post(title=title,content=content,user_id=current_user.id,date_posted=datetime.now())
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    return render_template('post.html',form=form)
 @main.route('/user/<uname>')
 def profile(uname):
     user=User.query.filter_by(username=uname).first()
